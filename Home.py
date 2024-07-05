@@ -8,7 +8,7 @@ import base64
 st.markdown("![Alt Text](https://media.giphy.com/media/vFKqnCdLPNOKc/giphy.gif)")
 
 ### gif from local file
-file_ = open("giphy.gif", "rb")
+file_ = open("/giphy.gif", "rb")
 contents = file_.read()
 data_url = base64.b64encode(contents).decode("utf-8")
 file_.close()
