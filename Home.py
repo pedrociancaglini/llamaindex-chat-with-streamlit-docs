@@ -9,6 +9,7 @@ st.set_page_config(page_title="Chat with the Streamlit docs, powered by LlamaInd
 
 ### gif from url
 st.markdown("![Alt Text](https://media.giphy.com/media/vFKqnCdLPNOKc/giphy.gif)")
+st.image("giphy.gif")
 
 '''
 ### gif from local file
