@@ -39,7 +39,7 @@ def load_data():
     docs = reader.load_data()
     
     llm = HuggingFaceInferenceAPI(
-        model_name= "mistralai/Mistral-7B-v0.3", #"HuggingFaceH4/zephyr-7b-beta", #"mistralai/Mixtral-8x22B-v0.1", # "HuggingFaceH4/zephyr-7b-beta", #"mistralai/Mistral-7B-Instruct-v0.3",
+        model_name= "HuggingFaceH4/zephyr-7b-beta", #"mistralai/Mistral-7B-v0.3", #"HuggingFaceH4/zephyr-7b-beta", #"mistralai/Mixtral-8x22B-v0.1", # "HuggingFaceH4/zephyr-7b-beta", #"mistralai/Mistral-7B-Instruct-v0.3",
         token=HF_KEY,
         max_new_tokens=256,
         temperature=0.7,
