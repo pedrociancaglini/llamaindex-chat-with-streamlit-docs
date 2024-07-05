@@ -1,15 +1,15 @@
 import streamlit as st
-from huggingface_hub import InferenceClient
+from openai import OpenAI
 from llama_index.core import VectorStoreIndex, SimpleDirectoryReader, Settings
-from llama_index.llms.huggingface import HuggingFaceInferenceAPI
+from llama_index.llms.openai import OpenAI as LlamaOpenAI
 
 st.set_page_config(page_title="Chat with the Streamlit docs, powered by LlamaIndex", page_icon="🦙", layout="centered", initial_sidebar_state="auto", menu_items=None)
 
-API_KEY = st.secrets["HF_KEY"]
+HF_KEY = st.secrets["HF_KEY"]
 MODEL_URL = "https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.3"
 
 st.title("Chat with the Streamlit docs, powered by LlamaIndex 💬🦙")
-st.info("This app uses a Hugging Face model for RAG.", icon="📃")
+st.info("This app uses a Hugging Face model for RAG via the OpenAI library.", icon="📃")
 
 if "messages" not in st.session_state.keys():
     st.session_state.messages = [
@@ -24,10 +24,16 @@ def load_data():
     reader = SimpleDirectoryReader(input_dir="./data", recursive=True)
     docs = reader.load_data()
     
-    llm = HuggingFaceInferenceAPI(
-        model_name="mistralai/Mistral-7B-Instruct-v0.3",
-        token=API_KEY,
-        endpoint_url=MODEL_URL,
+    client = OpenAI(
+        base_url="https://api-inference.huggingface.co/v1",
+        api_key=HF_KEY
+    )
+
+    llm = LlamaOpenAI(
+        model="mistralai/Mistral-7B-Instruct-v0.3",
+        api_key=HF_KEY,
+        api_base="https://api-inference.huggingface.co/v1",
+        client=client
     )
     
     Settings.llm = llm
@@ -53,7 +59,15 @@ for message in st.session_state.messages:
 
 if st.session_state.messages[-1]["role"] != "assistant":
     with st.chat_message("assistant"):
-        response = st.session_state.chat_engine.chat(prompt)
-        st.write(response.response)
-        message = {"role": "assistant", "content": response.response}
-        st.session_state.messages.append(message)
+        try:
+            response = st.session_state.chat_engine.chat(prompt)
+            st.write(response.response)
+            message = {"role": "assistant", "content": response.response}
+            st.session_state.messages.append(message)
+        except Exception as e:
+            st.warning(
+                "Oops, the server where the model is hosted did not respond. "
+                "This can happen because the free server on HuggingFace might be overloaded. "
+                "Please be patient and try again.",
+                icon="⚠️"
+            )
