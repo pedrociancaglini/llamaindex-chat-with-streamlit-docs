@@ -7,9 +7,7 @@ import base64
 st.set_page_config(page_title="Chat with the Streamlit docs, powered by LlamaIndex", page_icon="🦙", layout="centered", initial_sidebar_state="auto", menu_items=None)
 
 
-### gif from url
-st.markdown("![Alt Text](giphy.gif)")
-st.image("giphy.gif")
+st.write("![Your Awsome GIF](https://media.giphy.com/media/3ohzdIuqJoo8QdKlnW/giphy.gif)")
 
 
 HF_KEY = st.secrets["HF_KEY"]
