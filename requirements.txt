@@ -5,3 +5,6 @@ llama-index-llms-openai
 nltk
 pypdf
 huggingface_hub
+llama-index-embeddings-huggingface
+llama-index-embeddings-instructor
+sentence-transformers
