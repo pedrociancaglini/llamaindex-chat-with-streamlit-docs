@@ -2,6 +2,7 @@ import streamlit as st
 from openai import OpenAI
 from llama_index.core import VectorStoreIndex, SimpleDirectoryReader, Settings
 from llama_index.llms.openai import OpenAI as LlamaOpenAI
+from llama_index.embeddings.huggingface import HuggingFaceEmbedding
 
 st.set_page_config(page_title="Chat with the Streamlit docs, powered by LlamaIndex", page_icon="🦙", layout="centered", initial_sidebar_state="auto", menu_items=None)
 
@@ -36,7 +37,12 @@ def load_data():
         client=client
     )
     
+    # Set up the embedding model
+    embed_model = HuggingFaceEmbedding(model_name="sentence-transformers/all-MiniLM-L6-v2")
+    
+    # Configure Settings
     Settings.llm = llm
+    Settings.embed_model = embed_model
     Settings.chunk_size = 512
     Settings.chunk_overlap = 20
     
@@ -66,8 +72,8 @@ if st.session_state.messages[-1]["role"] != "assistant":
             st.session_state.messages.append(message)
         except Exception as e:
             st.warning(
-                "Oops, the server where the model is hosted did not respond. "
-                "This can happen because the free server on HuggingFace might be overloaded. "
-                "Please be patient and try again.",
+                "Oops, an error occurred. This might be due to server overload or connection issues. "
+                "Please try again in a moment.",
                 icon="⚠️"
             )
+            st.error(f"Error details: {str(e)}")
