@@ -8,7 +8,7 @@ st.set_page_config(page_title="Chat with the Streamlit docs, powered by LlamaInd
 
 
 ### gif from url
-st.markdown("![Alt Text](https://media.giphy.com/media/vFKqnCdLPNOKc/giphy.gif)")
+st.markdown("![Alt Text](https://github.com/pedrociancaglini/llamaindex-chat-with-streamlit-docs/blob/main/giphy.gif)")
 st.image("giphy.gif")
 
 '''
