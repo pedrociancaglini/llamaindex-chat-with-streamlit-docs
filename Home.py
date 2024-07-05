@@ -1,15 +1,14 @@
 import streamlit as st
 from llama_index.core import VectorStoreIndex, SimpleDirectoryReader, Settings
-from llama_index.llms.huggingface import HuggingFaceLLM
+from llama_index.llms.huggingface import HuggingFaceInferenceAPI
 from llama_index.embeddings.huggingface import HuggingFaceEmbedding
-
 
 st.set_page_config(page_title="Chat with the Streamlit docs, powered by LlamaIndex", page_icon="🦙", layout="centered", initial_sidebar_state="auto", menu_items=None)
 
 HF_KEY = st.secrets["HF_KEY"]
 
 st.title("Chat with the Streamlit docs, powered by LlamaIndex 💬🦙")
-st.info("This app uses a Hugging Face model for RAG.", icon="📃")
+st.info("This app uses a Hugging Face model via Inference API for RAG.", icon="📃")
 
 if "messages" not in st.session_state.keys():
     st.session_state.messages = [
@@ -24,14 +23,11 @@ def load_data():
     reader = SimpleDirectoryReader(input_dir="./data", recursive=True)
     docs = reader.load_data()
     
-    llm = HuggingFaceLLM(
+    llm = HuggingFaceInferenceAPI(
         model_name="mistralai/Mistral-7B-Instruct-v0.3",
-        tokenizer_name="mistralai/Mistral-7B-Instruct-v0.3",
-        api_key=HF_KEY,
-        context_window=2048,
+        token=HF_KEY,
         max_new_tokens=256,
         temperature=0.7,
-        device_map="auto",
     )
     
     # Set up the embedding model
