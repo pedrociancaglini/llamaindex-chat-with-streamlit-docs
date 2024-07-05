@@ -5,13 +5,13 @@ from llama_index.llms.openai import OpenAI as LlamaOpenAI
 #from llama_index.embeddings import HuggingFaceEmbedding
 from llama_index.embeddings.huggingface import HuggingFaceEmbedding
 
+
 st.set_page_config(page_title="Chat with the Streamlit docs, powered by LlamaIndex", page_icon="🦙", layout="centered", initial_sidebar_state="auto", menu_items=None)
 
 HF_KEY = st.secrets["HF_KEY"]
-MODEL_URL = "https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.3"
 
 st.title("Chat with the Streamlit docs, powered by LlamaIndex 💬🦙")
-st.info("This app uses a Hugging Face model for RAG via the OpenAI library.", icon="📃")
+st.info("This app uses a Hugging Face model for RAG.", icon="📃")
 
 if "messages" not in st.session_state.keys():
     st.session_state.messages = [
@@ -26,16 +26,14 @@ def load_data():
     reader = SimpleDirectoryReader(input_dir="./data", recursive=True)
     docs = reader.load_data()
     
-    client = OpenAI(
-        base_url="https://api-inference.huggingface.co/v1",
-        api_key=HF_KEY
-    )
-
-    llm = LlamaOpenAI(
-        model="mistralai/Mistral-7B-Instruct-v0.3",
+    llm = HuggingFaceLLM(
+        model_name="mistralai/Mistral-7B-Instruct-v0.3",
+        tokenizer_name="mistralai/Mistral-7B-Instruct-v0.3",
         api_key=HF_KEY,
-        api_base="https://api-inference.huggingface.co/v1",
-        client=client
+        context_window=2048,
+        max_new_tokens=256,
+        temperature=0.7,
+        device_map="auto",
     )
     
     # Set up the embedding model
